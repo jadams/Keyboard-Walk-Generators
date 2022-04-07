@@ -52,7 +52,7 @@ def walk_checker(graph, password, length=4, strict=True, loop=False):
                 
                 if loop:
                 
-                    if next_letter in graph[current_letter].values():
+                    if next_letter in list(graph[current_letter].values()):
                 
                         path_length += 1
                     
@@ -66,7 +66,7 @@ def walk_checker(graph, password, length=4, strict=True, loop=False):
                 
                 else:
                 
-                    if next_letter in graph[current_letter].values() and next_letter.lower() != current_letter.lower():
+                    if next_letter in list(graph[current_letter].values()) and next_letter.lower() != current_letter.lower():
                     
                         path_length += 1
                         
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     except IOError as e:
 
-        print "I/O error({0}): {1}".format(e.errno, e.strerror)
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
         
     
     if os.path.isfile(args.input):
@@ -118,19 +118,19 @@ if __name__ == "__main__":
                     status = walk_checker(graph, line.rstrip('\n\r'), args.l, args.strict, args.loop)
                     
                     if status and not args.stats:
-                        print line.rstrip('\n\r')
+                        print(line.rstrip('\n\r'))
                         
                     if status and args.stats:
                         total_true += 1
                     
 
             if args.stats:
-                print "Total Possible:\t " + str(total)
-                print "Total Walks:\t " + str(total_true), "({0:.1f}%)".format(float(total_true)/float(total) * 100)
+                print("Total Possible:\t " + str(total))
+                print("Total Walks:\t " + str(total_true), "({0:.1f}%)".format(float(total_true)/float(total) * 100))
                 
     else:
     
         status = walk_checker(graph, args.input.rstrip('\n\r'), args.l, args.strict, args.loop)
                 
         if status:
-            print args.input.rstrip('\n\r')
+            print(args.input.rstrip('\n\r'))
