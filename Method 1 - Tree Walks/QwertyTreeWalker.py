@@ -100,14 +100,14 @@ class QwertyTreeWalker:
 
         except IOError as e:
         
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print("I/O error({0}): {1}".format(e.errno, e.strerror))
 
         # Build exclude list if necessary
         if build_exclude:
         
             option = 1
             menu = {}
-            for direction in self.graph[self.graph.keys()[0]]:
+            for direction in self.graph[list(self.graph.keys())[0]]:
             
                 menu[option] = direction
                 option += 1
@@ -115,10 +115,10 @@ class QwertyTreeWalker:
             
             for opt in sorted(menu):
             
-                print "[" + str(opt) +"] " + menu[opt]
+                print("[" + str(opt) +"] " + menu[opt])
             
-            print "Enter Links to exclude as csv (EX:1,2,3)"
-            exclude_list_entered = raw_input(">> ")
+            print("Enter Links to exclude as csv (EX:1,2,3)")
+            exclude_list_entered = input(">> ")
             
             try:
             
@@ -139,7 +139,7 @@ class QwertyTreeWalker:
         letters = [key for key in self.graph]
         
         self.num_workers = int(ceil(len(letters)/num_of_processes))
-        work_chunks = [letters[x:x + self.num_workers] for x in xrange(0,len(letters), self.num_workers)]
+        work_chunks = [letters[x:x + self.num_workers] for x in range(0,len(letters), self.num_workers)]
         
         # Print start message stats
         self.chunks = len(work_chunks)
@@ -147,15 +147,15 @@ class QwertyTreeWalker:
         self.start_time = time.time()
         
         if not self.stdout:
-            print "\n\n**********************************************************************"
-            print "***************** WARNING: This may take a while *********************"
-            print "***************** Type: [S]tatus [Q]uit ******************************"
-            print "**********************************************************************\n\n"
-            print "[ " + str(self.max_depth) + "-step walk STARTED at:\t" + time.strftime("%Y-%m-%d-%H%M%S") + " with " + str(self.chunks) + " workers ]"
+            print("\n\n**********************************************************************")
+            print("***************** WARNING: This may take a while *********************")
+            print("***************** Type: [S]tatus [Q]uit ******************************")
+            print("**********************************************************************\n\n")
+            print("[ " + str(self.max_depth) + "-step walk STARTED at:\t" + time.strftime("%Y-%m-%d-%H%M%S") + " with " + str(self.chunks) + " workers ]")
         
         if self.exclude_list:
         
-            print "\nExcluding: \n" + str(self.exclude_list) + "\n at user request\n"
+            print("\nExcluding: \n" + str(self.exclude_list) + "\n at user request\n")
             
         
         # Spawn worker processes
@@ -185,7 +185,7 @@ class QwertyTreeWalker:
         while EXIT == False and self.KILL == False:
             
             workers_working = len(work_chunks)
-            for stat in self.stats.values():
+            for stat in list(self.stats.values()):
                 
                 if stat['done'] == "STOP":
                     
@@ -201,8 +201,8 @@ class QwertyTreeWalker:
         
         if not self.stdout:
         
-            print "\n[ " + str(self.max_depth) + "-step walk ENDED at: \t" + time.strftime("%Y-%m-%d-%H%M%S") +" ]\t\t"
-            print "\nWriting files. Please wait this could take several minutes.",
+            print("\n[ " + str(self.max_depth) + "-step walk ENDED at: \t" + time.strftime("%Y-%m-%d-%H%M%S") +" ]\t\t")
+            print("\nWriting files. Please wait this could take several minutes.", end=' ')
             self.print_end_stats(end_time)
         
         if self.KILL == False:
@@ -228,21 +228,21 @@ class QwertyTreeWalker:
         walk_rate = 0.
         walks_generated = 0
         
-        for stat in iter(self.stats.keys()):
+        for stat in iter(list(self.stats.keys())):
             
-            walks_generated += long(self.stats[stat]['walks_generated'])
-            sec += long(self.stats[stat]['seconds_left'])
-            walks_left += long(self.stats[stat]['walks_left'])
-            walk_rate += long(self.stats[stat]['walk_rate'])
+            walks_generated += int(self.stats[stat]['walks_generated'])
+            sec += int(self.stats[stat]['seconds_left'])
+            walks_left += int(self.stats[stat]['walks_left'])
+            walk_rate += int(self.stats[stat]['walk_rate'])
             start_time = self.stats[stat]['start_time']
         
         avg_walk_rate = walk_rate/self.chunks
         
-        print "[Done]"
-        print "\n\t[Run Stats]"
-        print "\t\tElasped Time: " + str((end_time-self.start_time)/60) + " minutes"
-        print "\t\t" + '{0:.8f}'.format(avg_walk_rate) + " walks/sec/worker"
-        print "\t\t" + str(walks_generated) + " walks generated\n\n"
+        print("[Done]")
+        print("\n\t[Run Stats]")
+        print("\t\tElasped Time: " + str((end_time-self.start_time)/60) + " minutes")
+        print("\t\t" + '{0:.8f}'.format(avg_walk_rate) + " walks/sec/worker")
+        print("\t\t" + str(walks_generated) + " walks generated\n\n")
         
         
     def report_stats(self, pid, total_walks, walk_rate, walks_generated, walks_left, seconds_left, done): 
@@ -264,16 +264,16 @@ class QwertyTreeWalker:
         walk_rate = 0.
         walks_generated = 0
         
-        for stat in iter(self.stats.keys()):
+        for stat in iter(list(self.stats.keys())):
             
-            walks_generated += long(self.stats[stat]['walks_generated'])
-            sec += long(self.stats[stat]['seconds_left'])
-            walks_left += long(self.stats[stat]['walks_left'])
-            walk_rate += long(self.stats[stat]['walk_rate'])
+            walks_generated += int(self.stats[stat]['walks_generated'])
+            sec += int(self.stats[stat]['seconds_left'])
+            walks_left += int(self.stats[stat]['walks_left'])
+            walk_rate += int(self.stats[stat]['walk_rate'])
             start_time = self.stats[stat]['start_time']
         
         
-        print '\r{0:.8f} walks/sec\t Walks: {1} Walks Left: {2}'.format(walk_rate, walks_generated, walks_left),
+        print('\r{0:.8f} walks/sec\t Walks: {1} Walks Left: {2}'.format(walk_rate, walks_generated, walks_left), end=' ')
         sys.stdout.write("\r")
         sys.stdout.flush()
 
@@ -355,7 +355,7 @@ class QwertyTreeWalker:
                 fout.flush()
             
             else:
-                print plain_text+ascii_hash
+                print(plain_text+ascii_hash)
             
             # calculate and report performance stats
      
@@ -363,7 +363,7 @@ class QwertyTreeWalker:
             walks_left = total_walks - walks_generated
             walks_ = float(walks_generated)
             walk_rate = walks_/(time.time()-self.stats[pid]['start_time'])
-            seconds_left = long(ceil(walks_left/walk_rate))
+            seconds_left = int(ceil(walks_left/walk_rate))
             
             self.report_stats(pid, total_walks, walk_rate, walks_generated, walks_left, seconds_left, "GO")
             
@@ -393,7 +393,7 @@ class QwertyTreeWalker:
             
         '''
         
-        num_of_edges = len(self.graph[self.graph.keys()[0]]) - len(self.exclude_list)    # Grab the first element and count links
+        num_of_edges = len(self.graph[list(self.graph.keys())[0]]) - len(self.exclude_list)    # Grab the first element and count links
         return int(ceil((num_of_edges**(walk_length-1))*len(graph)))
     
     def input_handler(self):
@@ -427,7 +427,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.p > 1 and args.stdout:
-        print "ERROR: Only 1 process allowed when using stdout"
+        print("ERROR: Only 1 process allowed when using stdout")
         sys.exit(1)
         
     walker = QwertyTreeWalker(args.file_name,args.x,args.noplain,args.H,args.stdout)
