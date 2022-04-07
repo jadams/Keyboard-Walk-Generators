@@ -49,16 +49,12 @@ global file_name
 def Combine(length, output):
     
     if length > 0:
-    
         with open(file_name, 'r') as f:
-    
             for line_num,chunk in enumerate(f):
-            
                 Combine(length-input_length, output + chunk.rstrip())
     else:
-	
-		output = output.rstrip()
-		print output[:len(output)-trim_length]
+        output = output.rstrip()
+        print(output[:len(output)-trim_length])
 
 if __name__ == "__main__":
 
